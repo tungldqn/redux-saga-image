@@ -10,22 +10,22 @@ export const setImages = images => ({
 })
 
 export const setError = error => ({
-  type: IMAGES.LOAD,
-  error
-})
+  type: IMAGES.LOAD_FAIL,
+  error,
+});
 
 export const loadImageStats = id => ({
   type: STATS.LOAD,
   id
-});
+})
 
 export const setImageStats = (id, downloads) => ({
   type: STATS.LOAD_SUCCESS,
   id,
   downloads
-});
+})
 
 export const setImageStatsError = id => ({
   type: STATS.LOAD_FAIL,
   id
-});
+})
