@@ -1,7 +1,7 @@
 import {KEY, URL} from '../../../api/base';
 import Axios from 'axios';
 
-export const fetchImages = async page => {
+export const fetchImages = page => {
   // const response = await fetch(`${URL}${KEY}&per_page=3&page=${page}`);
   // const data = await response.json();
   // if(response.status >= 400){

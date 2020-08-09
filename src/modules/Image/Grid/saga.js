@@ -1,7 +1,10 @@
+/* eslint-disable require-yield */
 import { put, call, take, all, takeEvery, select, fork } from 'redux-saga/effects';
 import { setImages, setError, loadImageStats, setImageStats, setImageStatsError } from './actions';
 import { IMAGES } from './constants';
 import { fetchImages, fetchImageStats } from './apiService';
+import Axios from 'axios';
+import {KEY, URL} from '../../../api/base';
 
 const getPage = state => state.image.grid.page;
 
@@ -13,6 +16,14 @@ function* handleImagesLoad() {
   } catch (error) {
     yield put(setError(error.toString()));
   }
+  // const page = yield select(getPage);
+  // Axios.get(`${URL}${KEY}&per_page=3&page=${page}`)
+  //   .then(res => {
+  //     yield put(setImages(res.data))
+  //   })
+  //   // .catch(error => {
+  //   //   put(setError((error.response.data.errors[0].toString())));
+  //   // })
 }
 
 function* watchImagesLoad() {
@@ -20,7 +31,7 @@ function* watchImagesLoad() {
 }
 
 function* handleStatsRequest(id) {
-  for (let i = 0; i < 3; i++) {
+  // for (let i = 0; i < 3; i++) {
     try {
       yield put(loadImageStats(id));
       const res = yield call(fetchImageStats, id);
@@ -31,20 +42,28 @@ function* handleStatsRequest(id) {
       // we just need to retry and dispactch an error
       // if we tried more than 3 times
     }
-  }
+  // }
   yield put(setImageStatsError(id));
 }
 
 function* watchStatsRequest(){
-  while (true) {
-    // we get the action here
-    const {images} = yield take(IMAGES.LOAD_SUCCESS);
-    for (let i = 0; i < images.length; i++) {
-      yield fork(handleStatsRequest, images[i].id);
-    }
+  // while (true) {
+  //   // we get the action here
+  //   const {images} = yield take(IMAGES.LOAD_SUCCESS);
+  //   for (let i = 0; i < images.length; i++) {
+  //     yield fork(handleStatsRequest, images[i].id);
+  //   }
+  // }
+  const {images} = yield take(IMAGES.LOAD_SUCCESS);
+  for (let i = 0; i < images.length; i++) {
+    yield fork(handleStatsRequest, images[i].id);
   }
 }
 
+function helloSaga() {
+  console.log("hello");
+}
+
 export default function*() {
-  yield all([watchImagesLoad(), watchStatsRequest()]);
+  yield all([watchImagesLoad(), watchStatsRequest(), helloSaga()]);
 }
